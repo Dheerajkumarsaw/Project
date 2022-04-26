@@ -1,0 +1,26 @@
+{
+  "name": "project-1",
+  "version": "1.0.0",
+  "description": "This is the my first project on Auther and Blogs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DheeruBhai2000/Project1-Bloging-site.git"
+  },
+  "author": "Group 5",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DheeruBhai2000/Project1-Bloging-site/issues"
+  },
+  "homepage": "https://github.com/DheeruBhai2000/Project1-Bloging-site#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.0",
+    "git": "^0.1.5",
+    "mongoose": "^6.3.1",
+    "nodemon": "^2.0.15"
+  }
+}
