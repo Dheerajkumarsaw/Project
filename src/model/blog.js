@@ -11,7 +11,7 @@ let newBlog = new mongoose.Schema({
     tags:[{type:String,required:true}],
     category: {type:String,required:true},
     subcategory:[{type:String,required:true}],
-    deletAt:{type:Date},
+    deleteAt:{type:Date},
     publishedAt:{type:Date},
     isDeleted:{type:Boolean,default:false},
     isPublished:{type:Boolean,default:false}
