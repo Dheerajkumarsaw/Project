@@ -6,7 +6,7 @@ let autherSchema = new mongoose.Schema({
     lastName:{type:String,required:true,trim:true},
     title:{type:String,required:true,trim:true,enum:["Mr","Mrs","Miss"]},
     email:{type:String,required:true,match: /.+\@.+\..+/,unique:true},
-    password:{type:String,required,unique:true}
+    password:{type:RegExp,required:true,unique:true,minlength:8,maxlength:20}
 },{timestamps:true});
 
 
