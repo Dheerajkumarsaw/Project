@@ -12,8 +12,13 @@ router.get("/get",function(req,res){
     res.send("hello")
 })
 
-router.post("/authors",controller.Author)
-router.post("/blogs",controller.blog)
+router.post("/authors",controller.Author);
+router.post("/blogs",controller.blog);
+router.get("/blogs",controller.getblog);
+router.delete("/blogs/:blogId",controller.deleted);
+router.delete("/blogs",controller.deletequery)
+
+
 
 
 
