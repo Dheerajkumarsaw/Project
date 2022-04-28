@@ -1,23 +1,25 @@
 const express = require("express")
 
-const router=express.Router();
-const controller=require("../controller/controller")
+const router = express.Router();
+const controller = require("../controller/controller");
+const middleware = require("../middleware/auth")
 
 
 
 
 
 
-router.get("/get",function(req,res){
+router.get("/get", function (req, res) {
     res.send("hello")
 })
 
-router.post("/authors",controller.Author);
-router.post("/blogs",controller.blog);
-router.get("/blogs",controller.getblog);
-router.delete("/blogs/:blogId",controller.deleted);
-router.delete("/blogs",controller.deletequery);
-router.put("/blogs/:blogId",controller.updateblog)
+router.post("/authors", controller.Author);
+router.post("/blogs", middleware.Authentication, middleware.Authorisation, controller.blog);
+router.get("/blogs", middleware.Authentication, middleware.Authorisation, controller.getblog);
+router.delete("/blogs/:blogId", middleware.Authentication, middleware.Authorisation, controller.deleted);
+router.delete("/blogs", middleware.Authentication, middleware.Authorisation, controller.deletequery);
+router.put("/blogs/:blogId", middleware.Authentication, middleware.Authorisation, controller.updateblog);
+router.post("/login", controller.login)
 
 
 
@@ -31,4 +33,4 @@ router.put("/blogs/:blogId",controller.updateblog)
 
 
 
-module.exports=router;
+module.exports = router;

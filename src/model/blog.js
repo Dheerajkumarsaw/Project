@@ -12,7 +12,7 @@ let newBlog = new mongoose.Schema({
     category: { type: String, required: true },
     subcategory: [{ type: String, required: true }],
     deleteAt: { type: Date },
-    publishedAt: {type:Date} ,
+    publishedAt: { type: Date },
     isDeleted: { type: Boolean, default: false },
     isPublished: { type: Boolean, default: false }
 }, { timestamps: true });
