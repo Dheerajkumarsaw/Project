@@ -54,7 +54,7 @@ const md3 = async function (req, res, next) {
         let userLoggedIn = decodedToken.userId;
 
         if (userid != userLoggedIn)
-            return res.status(403).send({ status: false, message: "unauthorised user" })
+            return res.status(400).send({ status: false, message: "unauthorised user" })
         next();
 
     } catch (err) {

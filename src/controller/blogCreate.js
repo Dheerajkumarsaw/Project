@@ -27,7 +27,7 @@ let blog = async function (req, res) {
         if (!authorId.trim()) return res.status(400).send({ status: false, message: "Please Enter your Autherid This is mandatory" });
 
         let modelid = await authorModel.findById({ _id: authorId });
-        if (modelid == null) return res.status(400).send({ status: false, message: "No blog  exist with this author id" })
+        if (modelid == null) return res.status(400).send({ status: false, message: "No auther exist with this author id Please register first" })
         let id = modelid._id;
         if (!(id == authorId)) return res.status(400).send({ status: false, message: "Please enter a avlid autherId" });
 

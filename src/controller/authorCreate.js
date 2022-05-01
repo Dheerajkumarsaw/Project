@@ -10,7 +10,7 @@ let author = async function (req, res) {
         const { firstName, lastName, title, email, password } = data;
 
         let regx = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9]+.)([a-z]+)(.[a-z])?$/
-        if (Object.keys(data).length == 0) return res.status(400).send("Please Enter Data");
+        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message:"Please Enter Data"});
 
         if (!firstName) return res.status(400).send({ status: false, message: "Please enter your First Name " })
         if (!firstName.trim()) return res.status(400).send({ status: false, message: "Please Enter your First Name This is Mandatory" });
@@ -23,6 +23,7 @@ let author = async function (req, res) {
 
         if (!email) return res.status(400).send({ status: false, message: "Please Enter Your Email " })
         if (!email.trim()) return res.status(400).send({ status: false, message: "Please Enter your Email This is Mandatory" });
+        
         const uniqemail = await authorModel.findOne({ email: email });
         if (uniqemail) return res.status(400).send({ status: false, message: "Email Allready Exist" })
         if (!regx.test(email)) return res.status(400).send({ status: false, message: "Please Enter a valid EmailId" });

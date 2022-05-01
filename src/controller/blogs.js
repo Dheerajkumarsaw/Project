@@ -28,7 +28,7 @@ const updateBlog = async function (req, res) {
             { new: true, upsert: true }
         )
 
-        res.status(200).send({ status: true, data: updatedData })
+        res.status(200).send({ status: true,message:"Data update successsfully", data: updatedData })
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })
     }

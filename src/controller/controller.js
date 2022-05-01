@@ -37,8 +37,8 @@ let deletequery = async function (req, res) {
     try {
         let data = req.query;
         let mydata = []
-        let update;
-        if (Object.keys(data).length = 0) return res.status(400).send({ status: false, message: "Please enter data" })
+    
+        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "Please enter data" })
         let deletedata = await blogModel.find(data)
         if (!deletedata) return res.status(404).send({ status: false, message: "Such Blog not found" })
 
@@ -50,7 +50,6 @@ let deletequery = async function (req, res) {
             if (mydata[i].isDeleted != true) {
                 mydata[i] = await blogModel.updateMany(mydata[i], { $set: { isDeleted: true } }, { new: true, upsert: true })
             }
-            console.log(mydata[i]);
         }
         res.status(201).send({ status: true, message: "Blog is successfully deleted" })
     }
