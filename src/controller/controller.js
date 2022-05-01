@@ -63,20 +63,54 @@ let updateblog = async function (req, res) {
         }
     };
     // ==========================================  Delete  Blog  ===============================================
+
     let deletequery = async function (req, res) {
         try {
             let data = req.query;
-            let filter = { data, isDeleted: false, }
-            if (Object.keys(data).length == 0) return res.status(400).send("Please enter data")
-            let deletedata = await blogModel.find(filter,)
-            if (!deletedata) return res.status(404).send("Such Blog not found");
-            let update = await blogModel.find(filter, { $set: { isDeleted: true } }, { new: true })
-            res.status(201).send("your update is Successfully done")
+            let mydata=[]
+            let update;
+            if (Object.keys(data).length = 0) return res.status(400).send("Please enter data")
+            let deletedata = await blogModel.find(data)
+            for(let i=0;i<deletedata.length;i++)
+            {
+                    mydata[i]=deletedata[i];
+            }
+           
+            if (!deletedata) return res.status(404).send("Such Blog not found")
+            //let del = deletedata.isDeleted;
+    
+            if (deletedata.isDeleted) return res.status(400).send("Blog is Allready deleted")
+            for(let i=0;i<mydata.length;i++)
+            {
+                if(mydata[i].isDeleted!=true){
+             mydata[i]=await blogModel.updateMany(mydata[i],{$set:{isDeleted:true}},{new:true,upsert:true})
+            }
+            console.log(mydata[i]);
+            }
+            res.status(201).send(mydata)
         }
         catch (err) {
             res.status(500).send(err.message)
         }
     };
+    
+
+
+
+    // let deletequery = async function (req, res) {
+    //     try {
+    //         let data = req.query;
+    //         let filter = { data, isDeleted: false, }
+    //         if (Object.keys(data).length == 0) return res.status(400).send("Please enter data")
+    //         let deletedata = await blogModel.find(filter,)
+    //         if (!deletedata) return res.status(404).send("Such Blog not found");
+    //         let update = await blogModel.find(filter, { $set: { isDeleted: true } }, { new: true })
+    //         res.status(201).send("your update is Successfully done")
+    //     }
+    //     catch (err) {
+    //         res.status(500).send(err.message)
+    //     }
+    // };
 
     module.exports = { updateblog, getblog, deleted, deletequery }
 
