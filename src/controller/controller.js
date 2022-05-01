@@ -54,8 +54,7 @@ let updateblog = async function (req, res) {
             if (!blogid) return res.status(400).send("Please enter Blog id")
             let modelid = await blogModel.find({ _id: blogid, isDeleted: false })
             if (!modelid) return res.status(404).send("Record  Not found");
-            if (len == 0) return res.status(400).send("Blog not found")
-            if (del == true) return res.status(400).send("Blog is already deleted")
+    
             let modified = await blogModel.findByIdAndUpdate({ _id: blogid }, { $set: { isDeleted: true, deleteAt: Date.now() } }, { new: true })
             res.status(201).send({ status: true, message: "Your Blog Is Successfully Deleted" })
         } catch (err) {
@@ -71,15 +70,13 @@ let updateblog = async function (req, res) {
             let update;
             if (Object.keys(data).length = 0) return res.status(400).send("Please enter data")
             let deletedata = await blogModel.find(data)
+            if (!deletedata) return res.status(404).send("Such Blog not found")
+
             for(let i=0;i<deletedata.length;i++)
             {
                     mydata[i]=deletedata[i];
             }
            
-            if (!deletedata) return res.status(404).send("Such Blog not found")
-            //let del = deletedata.isDeleted;
-    
-            if (deletedata.isDeleted) return res.status(400).send("Blog is Allready deleted")
             for(let i=0;i<mydata.length;i++)
             {
                 if(mydata[i].isDeleted!=true){
@@ -116,19 +113,3 @@ let updateblog = async function (req, res) {
 
 
 
-
-// ===========================boubt code=====================
-// try {
-//     let blogid = req.params.blogId;
-//     let data = req.body;
-//     // let publishedAt = req.body.date;
-//     if (!blogid) return res.status(400).send("Please enter your Blog id");
-//     let find = await blogModel.find({ _id: blogid, isDeleted: false });
-//     if (!find) return res.status(404).send("Record Not Found");
-//     find = await blogModel.find({ _id: blogid, isDeleted: false }, { $set: {} })
-//     // if (!publishedAt) publishedAt = Date.now();
-//     // let blog = await blogModel.findById(blogid);
-//     // if (!blog) return res.status(400).send("No Such blog exist");
-//     // let update = await blogModel.findByIdAndUpdate({ _id: blogid }, { $set: { data, publishedAt: publishedAt } }, { new: true });
-//     // res.status(200).send({ data: update })
-// }
