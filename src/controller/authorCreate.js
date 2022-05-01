@@ -1,9 +1,4 @@
 
-// const isValid=function(value){
-//     if (typeof value=="undefined" || typeof value==null) return false
-//     if (typeof value== "string" && typeof value.toString().trim().length==0) return false
-//     return true
-// }
 
 const authorModel = require("../model/authorModel");
 
