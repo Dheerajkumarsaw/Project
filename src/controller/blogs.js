@@ -1,11 +1,9 @@
-const req = require("express/lib/request")
-const mongodb = require("mongodb");
-const { header } = require("express/lib/request");
-const ObjectId = require('mongoose').Types.ObjectId;
-const blogModel = require("../model/authorModel")
-const authorModel = require("../model/blogModel")
+
+const blogModel = require("../model/blogModel")
+
 const moment = require("moment")
-const jwt = require("jsonwebtoken");
+
+
 const updateBlog = async function (req, res) {
     try {
         let blogId = req.params.blogId;

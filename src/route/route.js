@@ -12,12 +12,18 @@ const middleware = require("../middleware/auth")
 
 
 router.post("/authors", authorController.author);
+
 router.post("/blogs", middleware.authentication, blogController.blog);
+
 router.get("/blogs", middleware.authentication, controller.getblog);
+
 router.delete("/blogs/:blogId", middleware.authentication, middleware.authorisation, controller.deleted);
+
 router.delete("/blogs", middleware.authentication, middleware.md3, controller.deletequery);
+
 router.put("/blogs/:blogId", middleware.authentication, middleware.authorisation, updatecontroller.updateBlog);
-router.post("/login", loginController.login)
+
+router.post("/login", loginController.login);
 
 
 

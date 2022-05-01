@@ -46,7 +46,7 @@ const md3 = async function (req, res, next) {
         let token = req.headers["x-api-key"];
 
         if (!token) res.status(401).send({ status: false, msg: "token is required" });
-        let decodedToken = jwt.verify(token, "functionup-thorium");
+        let decodedToken = jwt.verify(token, "Group-5");
 
         if (!decodedToken)
             return res.status(401).send({ status: false, msg: "token is invalid" });
