@@ -5,17 +5,21 @@ const moment = require("moment");
 // ==================================================    Get Blog  ================================================
 let getblog = async function (req, res) {
     try {
-        let data = req.query;
-        let filter = await blogModel.find({ $and: [data, { isDeleted: false, isPublished: true }] })
-        if (!data) return res.status(400).send({ status: false, message: "Please Enter Your Filter" })
-        filter = await blogModel.find({ isDeleted: false, isPublished: true });
-        if (filter.length == 0) return res.status(404).send({ Error: "Record Not found" })
-        res.status(200).send({ status: true, data: filter })
+         let data=req.query
+         console.log(data)
+         let getData =await blogModel.find( {$and : [data, { isDeleted: false }, { isPublished: true }]})
+         console.log( [data, { isDeleted: false }, { isPublished: true }])
+        if(!(data))
+    getData = await blogModel.find({ isDeleted: false, isPublished: true})
+        
+        if (getData.length===0)
+            return res.status(404).send({ status: false, msg: "Blogs are not present" })
+        res.status(200).send({ status: true, msg: getData })
     }
-    catch (err) {
-        res.status(500).send({ status: false, message: err.message })
+    catch (error) {
+        res.status(400).send({ status: false, msg: error.message })
     }
-};
+}
 
 // ==========================================  Delete  Blog  ==================================================
 let deleted = async function (req, res) {

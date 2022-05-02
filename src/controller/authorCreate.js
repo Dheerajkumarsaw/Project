@@ -7,16 +7,16 @@ let author = async function (req, res) {
     try {
 
         const data = req.body
-        const { firstName, lastName, title, email, password } = data;
+        const { fname, lname, title, email, password } = data;
 
         let regx = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9]+.)([a-z]+)(.[a-z])?$/
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message:"Please Enter Data"});
 
-        if (!firstName) return res.status(400).send({ status: false, message: "Please enter your First Name " })
-        if (!firstName.trim()) return res.status(400).send({ status: false, message: "Please Enter your First Name This is Mandatory" });
+        if (!fname) return res.status(400).send({ status: false, message: "Please enter your First Name " })
+        if (!fname.trim()) return res.status(400).send({ status: false, message: "Please Enter your First Name This is Mandatory" });
 
-        if (!lastName) return res.status(400).send({ status: false, message: "Please Enter Your Last Name" })
-        if (!lastName.trim()) return res.status(400).send({ status: false, message: "Please Enter your Last Name This is Mandatory" });
+        if (!lname) return res.status(400).send({ status: false, message: "Please Enter Your Last Name" })
+        if (!lname.trim()) return res.status(400).send({ status: false, message: "Please Enter your Last Name This is Mandatory" });
 
         if (!title) return res.status(400).send({ status: false, message: "Please Enter Your Title" })
         if (!title.trim()) return res.status(400).send({ status: false, message: "Please Enter your Title This is Mandatory" });
