@@ -6,9 +6,9 @@ const moment = require("moment");
 let getblog = async function (req, res) {
     try {
          let data=req.query
-         console.log(data)
+    
          let getData =await blogModel.find( {$and : [data, { isDeleted: false }, { isPublished: true }]})
-         console.log( [data, { isDeleted: false }, { isPublished: true }])
+        
         if(!(data))
     getData = await blogModel.find({ isDeleted: false, isPublished: true})
         
