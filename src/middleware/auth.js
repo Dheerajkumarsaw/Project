@@ -25,7 +25,7 @@ let authorisation = async function (req, res, next) {
         let token = req.headers["x-api-key"];
         if (!token) return res.status(400).send({ status: false, message: "Please enter your token" })
         let blog = await blogModel.findById(blogId);
-
+        if (!blog) return res.status(400).send({ status: false, message:"No author Exist With this id"} )
         let autherid = blog.authorId
 
         let decode = jwt.verify(token, "Group-5");
