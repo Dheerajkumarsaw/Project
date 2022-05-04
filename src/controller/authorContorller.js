@@ -18,6 +18,7 @@ const authorCreate = async function (req, res) {
         if (Object.keys(requestBody).length == 0) return res.status(400).send({ status: false, message: "Invalid Request Please Enter Author Details" });
 
         const { fname, lname, title, email, password } = requestBody; // Object Destructuring
+
         const regx = /^([a-z0-9\._]+)@([a-z0-9]+.)([a-z]+)(.[a-z])?$/;
         if (!isValid(fname)) return res.status(400).send({ status: false, message: "Please Enter First Name" });
 
@@ -51,7 +52,7 @@ const login = async function (req, res) {
     try {
         const requestBody = req.body;
         if (Object.keys(requestBody).length == 0) return res.status(400).send({ status: false, message: "Please Enter Email and password" })
-        const { email, password } = requestBody
+        const { email, password } = requestBody //Destructuring
         const regx = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9]+.)([a-z]+)+(.[a-z])?$/;
 
         if (!isValid(email)) return res.status(400).send({ status: false, message: "Please Enter Email" });

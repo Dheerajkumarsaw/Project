@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const Object_id = mongoose.Types.ObjectId
 const newBlog = new mongoose.Schema({
+
     title: { type: String, required: true, trim: true },
     body: { type: String, required: true, trim: true },
     authorId: {
@@ -15,6 +16,7 @@ const newBlog = new mongoose.Schema({
     publishedAt: { type: Date, default: null },
     isDeleted: { type: Boolean, default: false },
     isPublished: { type: Boolean, default: false }
+    
 }, { timestamps: true });
 
 
