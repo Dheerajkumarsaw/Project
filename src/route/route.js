@@ -13,7 +13,7 @@ router.post("/blogs", middleware.authentication, blogController.blogCreate);
 
 router.get("/blogs", middleware.authentication, blogController.getblog);
 
-router.delete("/blogs/:blogId", middleware.authentication, middleware.authorisation,blogController.deleted);
+router.delete("/blogs/:blogId", middleware.authentication, middleware.authorisation, blogController.deleted);
 
 router.delete("/blogs", middleware.authentication, middleware.md3, blogController.deletequery);
 

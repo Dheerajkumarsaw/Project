@@ -18,7 +18,7 @@ const blogCreate = async function (req, res) {
         if (Object.keys(requestBody).length == 0) return res.status(400).send({ status: false, message: "Please Enter Data" });
 
         const { title, body, authorId, tags, category, subcategory, isPublished } = requestBody; // Destructuring
-
+        // validations
         if (!isValid(title)) return res.status(400).send({ status: false, message: "Please Enter Blogs title" });
         if (!isValid(body)) return res.status(400).send({ status: false, message: "Enter Blogs Details" });
         if (!isValid(authorId)) return res.status(400).send({ status: false, message: "Please Enter AuthorId" });
@@ -26,6 +26,7 @@ const blogCreate = async function (req, res) {
         if (!isValid(tags)) return res.status(400).send({ status: false, message: "Enter Your Blog  Tags" });
         if (!isValid(category)) return res.status(400).send({ status: false, message: "Enter Blog category" });
         if (!isValid(subcategory)) return res.status(400).send({ status: false, message: "Enter Blog's subcategory" });
+
         const blogData = {
             title, body, authorId, category,
             isPublished: isPublished ? isPublished : false,
@@ -66,27 +67,24 @@ const updateBlog = async function (req, res) {
         const blogId = req.params.blogId;
         if (!blogId) return res.status(400).send({ status: false, message: "id is missing" });
         const requestBody = req.body;
-        // if(!requestBody) return res.status(400).send({status:false,message:"Please Enter Filter as you want"})
-        // const { title, body, tags, category, subcategory } = requestBody;
-        let blogCategory = req.body.category;
-        let blogTitle = req.body.title;
-        let blogBody = req.body.body;
-        let blogTags = req.body.tags;
-        let blogSubcategory = req.body.subcategory;
-        let blogPublishedDate = moment();
+        if (Object.keys(requestBody).length == 0) return res.status(400).send({ status: false, message: "Please Enter Filter as you want" })
+        const { title, body, tags, category, subcategory } = requestBody;
+        // validations
+        if (!isValid(title)) return res.status(400).send({ status: false, message: "Enter title" })
+        if (!isValid(body)) return res.status(400).send({ status: false, message: "Enter body" })
+        if (!isValid(tags)) return res.status(400).send({ status: false, message: "Enter tags" })
+        if (!isValid(category)) return res.status(400).send({ status: false, message: "Enter category" })
+        if (!isValid(subcategory)) return res.status(400).send({ status: false, message: "Enter subcategory" })
 
         let blog = await blogModel.findById({ _id: blogId });
         if (!blog) return res.status(404).send({ status: false, message: "no such blog exist with this id" });
-        blog.title = blogTitle;
-        blog.body = blogBody;
-        blog.tags = blogTags;
-        blog.subcategory = blogSubcategory;
-        blog.category = blogCategory;
-        let updatedData = await blogModel.findOneAndUpdate(
+        let isData = await blogModel.findOne({ _id: blogId, isDeleted: false, isPublished: false });
+        if (!isData) return res.status(400).send({ status: false, message: "Allready Updated" })
 
-            { _id: blogId },
-            { title: blogTitle, body: blogBody, category: blogCategory, $push: { tags: blogTags, subcategory: blogSubcategory }, publishedAt: blogPublishedDate, isPublished: true },
-            { new: true, upsert: true }
+        let updatedData = await blogModel.findOneAndUpdate(
+            { _id: blogId, isDeleted: false, isPublished: false },
+            { title: title, body: body, category: category, $push: { tags: tags, subcategory: subcategory }, publishedAt: Date.now(), isPublished: true },
+            { new: true }
         )
 
         res.status(200).send({ status: true, message: "Data update successsfully", data: updatedData })
@@ -117,8 +115,8 @@ let deleted = async function (req, res) {
     try {
         const blogid = req.params.blogId;
         if (!blogid) return res.status(400).send({ status: false, message: "Please enter Blog id" });
+        // validations
         if (!isValidObjectId(blogid)) return res.status(400).send({ status: false, message: `${blogid} is not valid id` });
-
         let blog = await blogModel.find({ _id: blogid, isDeleted: false })
         if (!blog) return res.status(404).send({ status: false, message: "Record  Not found" });
 
@@ -135,7 +133,7 @@ let deletequery = async function (req, res) {
         let data = req.query;
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, message: "Please enter data" })
         const { authorId, category, tags, subcategory, isPublished } = data; // Destructuring
-
+        // validations
         if (!isValid(authorId)) return res.status(400).send({ status: false, message: "Not valid Author id" });
         if (!isValidObjectId(authorId)) return res.status(400).send({ status: false, message: "Not valid Author id" })
         if (!isValid(category)) return res.status(400).send({ status: false, message: "Enter Blog category" });
@@ -155,8 +153,4 @@ let deletequery = async function (req, res) {
     }
 };
 
-
 module.exports = { getblog, deleted, deletequery, updateBlog, blogCreate }
-
-
-

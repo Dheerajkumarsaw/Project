@@ -25,7 +25,7 @@ let authorisation = async function (req, res, next) {
         let token = req.headers["x-api-key"];
         if (!token) return res.status(400).send({ status: false, message: "Please enter your token" })
         let blog = await blogModel.findById(blogId);
-        if (!blog) return res.status(400).send({ status: false, message:"No blog Exist With this id"} )
+        if (!blog) return res.status(400).send({ status: false, message: "No blog Exist With this id" })
         let autherid = blog.authorId
 
         let decode = jwt.verify(token, "Group-5");
@@ -42,15 +42,15 @@ let authorisation = async function (req, res, next) {
 // =============================   query middleware   ===============================
 const md3 = async function (req, res, next) {
     try {
+        const data = req.query;
+        if (!data) return res.status(400).send({ status: false, message: "Query not Enter First" })
         let userid = req.query.authorId
         let token = req.headers["x-api-key"];
 
         if (!token) res.status(401).send({ status: false, msg: "token is required" });
         let decodedToken = jwt.verify(token, "Group-5");
-
         if (!decodedToken)
             return res.status(403).send({ status: false, msg: "token is invalid" });
-        // req["x-api-key"] = token;
         let userLoggedIn = decodedToken.userId;
 
         if (userid != userLoggedIn)

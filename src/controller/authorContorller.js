@@ -54,7 +54,7 @@ const login = async function (req, res) {
         if (Object.keys(requestBody).length == 0) return res.status(400).send({ status: false, message: "Please Enter Email and password" })
         const { email, password } = requestBody //Destructuring
         const regx = /^([a-zA-Z0-9\._]+)@([a-zA-Z0-9]+.)([a-z]+)+(.[a-z])?$/;
-
+        // validations
         if (!isValid(email)) return res.status(400).send({ status: false, message: "Please Enter Email" });
         if (!regx.test(email)) return res.status(400).send({ status: false, message: "Enter valid Email" });
 
