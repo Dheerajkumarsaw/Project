@@ -22,15 +22,4 @@ router.put("/blogs/:blogId", middleware.authentication, middleware.authorisation
 router.post("/login", authorController.login);
 
 
-
-
-
-
-
-
-
-
-
-
-
 module.exports = router;
