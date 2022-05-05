@@ -63,9 +63,12 @@ const blogCreate = async function (req, res) {
 
 const updateBlog = async function (req, res) {
     try {
-        let blogId = req.params.blogId;
+        const blogId = req.params.blogId;
         if (!blogId) return res.status(400).send({ status: false, message: "id is missing" });
-        let blogCategory=req.body.category;
+        const requestBody = req.body;
+        // if(!requestBody) return res.status(400).send({status:false,message:"Please Enter Filter as you want"})
+        // const { title, body, tags, category, subcategory } = requestBody;
+        let blogCategory = req.body.category;
         let blogTitle = req.body.title;
         let blogBody = req.body.body;
         let blogTags = req.body.tags;
@@ -78,11 +81,11 @@ const updateBlog = async function (req, res) {
         blog.body = blogBody;
         blog.tags = blogTags;
         blog.subcategory = blogSubcategory;
-        blog.category=blogCategory;
+        blog.category = blogCategory;
         let updatedData = await blogModel.findOneAndUpdate(
 
             { _id: blogId },
-            { title: blogTitle, body: blogBody,category:blogCategory, $push: { tags: blogTags, subcategory: blogSubcategory }, publishedAt: blogPublishedDate, isPublished: true },
+            { title: blogTitle, body: blogBody, category: blogCategory, $push: { tags: blogTags, subcategory: blogSubcategory }, publishedAt: blogPublishedDate, isPublished: true },
             { new: true, upsert: true }
         )
 
@@ -115,11 +118,11 @@ let deleted = async function (req, res) {
         const blogid = req.params.blogId;
         if (!blogid) return res.status(400).send({ status: false, message: "Please enter Blog id" });
         if (!isValidObjectId(blogid)) return res.status(400).send({ status: false, message: `${blogid} is not valid id` });
-        
+
         let blog = await blogModel.find({ _id: blogid, isDeleted: false })
         if (!blog) return res.status(404).send({ status: false, message: "Record  Not found" });
 
-        let modified = await blogModel.findByIdAndUpdate({ _id: blogid ,isDeleted:false}, { $set: { isDeleted: true, deleteAt: Date.now() } }, { new: true })
+        let modified = await blogModel.findByIdAndUpdate({ _id: blogid, isDeleted: false }, { $set: { isDeleted: true, deleteAt: Date.now() } }, { new: true })
         res.status(200).send({ status: true, message: "Your Blog Is Successfully Deleted" })
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })
