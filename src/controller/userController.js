@@ -74,7 +74,7 @@ const loginUser = async function (req, res) {
         if (!emailRegx.test(email)) return res.status(400).send({ status: false, message: "Enter valid email" });
 
         // password validations
-        if (!isValid(password)) return res.status(400).send({ status: false, message: "Enter password" });
+        if (!isValid(password)) return res.status(400).send({ status: false, message: "Enter password first" });
         if (!(password.length >= 8 && password.length <= 15)) return res.status(400).send({ status: false, message: "Enter valid Password" });
 
         //  DB VALIDATIONS 
