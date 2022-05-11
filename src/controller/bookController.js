@@ -36,8 +36,8 @@ const updateBook = async function (req, res) {
         if (!dbbook) {
             return res.status(404).send({ status: false, message: "Book not found With Given id" })
         }
-        if (req.loggedinuser != dbbook.userId) {   //// CHECKING USER AUTERIZATION
-            return res
+        if (req.loggedInUser != dbbook.userId) {   //// CHECKING USER AUTERIZATION
+            return res.status(403).send({ status: false, message: "Unautherize To Make Changes" })
         }
         const requestBody = req.body
         //  IF BODY IS EMPTY
@@ -95,6 +95,10 @@ const deleteBook = async function (req, res) {
         if (!existBook) {
             return res.status(404).send({ status: false, message: "Book not Found ,Allready Deletd With given id" });
         }
+        //// CHECKING USER AUTERIZATION
+        if (req.loggedInUser != existBook.userId) {
+            return res.status(403).send({ status: false, message: "Unautherize To Make Changes" })
+        }
         deletedAt = Date.now();
         const updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: deletedAt } }, { new: true });
         res.status(200).send({ status: true, message: "Successfully Deleted", data: updatedBook })
@@ -147,14 +151,20 @@ const createBook = async function (req, res) {
         if (isbnExist) {
             return res.status(400).send({ status: false, message: "Doublicate ISBN, not Allowed! " })
         }
-        let userExist = await userModel.findOne({ _id: userId })
-        if (!userExist) {
-            return res.status(400).send({ status: false, message: "user does not exist with this user ID" })
-        }
         let titleExist = await bookModel.findOne({ title: title })
         if (titleExist) {
             return res.status(400).send({ status: false, message: "The title name already exists." })
         }
+        // USER  EXISTANCE IN DB
+        let userExist = await userModel.findOne({ _id: userId })
+        if (!userExist) {
+            return res.status(400).send({ status: false, message: "user does not exist with this user ID" })
+        }
+        //// CHECKING USER AUTERIZATION
+        if (req.loggedInUser != userExist._id) {
+            return res.status(403).send({ status: false, message: "Unautherize to make Changes" })
+        }
+
 
         //  DATA  CREATION
         const createdBook = await bookModel.create(requestBody)
