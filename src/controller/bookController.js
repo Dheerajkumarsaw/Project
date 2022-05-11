@@ -1,6 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const bookModel = require("../model/bookModel");
 const userModel = require("../model/userModel")
+const reviewModel = require("../model/reviewModel")
+
 const isValid = function (value) {
     if (typeof value === "undefined" || typeof value === null) return false
     if (typeof value == "string" && value.trim().length === 0) return false
@@ -29,7 +31,7 @@ const updateBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Enter BookId in Params also Valid Id" })
         }
         //  DOCUMENT EXIST OR NOT IN DB
-        const dbbook = await bookModel.findOne({ bookId: bookId, isDeleted: false });
+        const dbbook = await bookModel.findOne({ _id: bookId, isDeleted: false });
         if (!dbbook) {
             return res.status(404).send({ status: false, message: "Book not found With Given id" })
         }
@@ -87,7 +89,7 @@ const deleteBook = async function (req, res) {
         }
         const existBook = await bookModel.findOne({ _id: bookId, isDeleted: false });
         if (!existBook) {
-            return res.status(404).send({ status: false, message: "Book not Found With given id" });
+            return res.status(404).send({ status: false, message: "Book not Found ,Allready Deletd With given id" });
         }
         deletedAt = Date.now();
         const updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: deletedAt } }, { new: true });
@@ -100,9 +102,9 @@ const deleteBook = async function (req, res) {
 
 
 // -------------validators-----------
-const regType01 = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/ //ISBN
-const regType02 = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/ //Date
-// const regType03 = /^[A-Za-z0-9]{24}$/
+// const regType01 = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/ //ISBN
+// const regType02 = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/ //Date
+// // const regType03 = /^[A-Za-z0-9]{24}$/
 const regType04 = /^[A-Za-z, ]{4,}$/ //
 
 //------------creation---------------------
@@ -110,7 +112,7 @@ const createBook = async function (req, res) {
     try {
         let requestBody = req.body;
 
-        const { title, excerpt, userId, ISBN, category, subcategory, reviews, releasedAt } = requestBody; //destructuring
+        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = requestBody; //destructuring
 
         if (Object.keys(requestBody).length == 0) {
             return res.status(400).send({ status: false, message: "Please fill all mandatory fields" })
@@ -136,7 +138,7 @@ const createBook = async function (req, res) {
         if (!isValid(releasedAt) || !isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter the date in YYYY-MM-DD format, is mandatory field." });
         }
-        // --------------Data Base Search------------
+        //  CHECKING UNIQUE EXISTENCE IN DB
         let isbnExist = await bookModel.findOne({ ISBN: ISBN })
         if (isbnExist) {
             return res.status(400).send({ status: false, message: "Doublicate ISBN, not Allowed! " })
@@ -150,7 +152,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "The title name already exists." })
         }
 
-        // -----------------data creation-----------
+        //  DATA  CREATION
         const createdBook = await bookModel.create(requestBody)
         res.status(201).send({ status: true, message: "Success", data: createdBook })
 
@@ -169,7 +171,7 @@ const getBook = async function (req, res) {
         if (Object.keys(queryParams).length > 0) {
             const { userId, category, subcategory } = queryParams;      //DESTRUCTURING 
             //  QUERY VALIDATIONS
-            if (isValid(userId) && (ObjectId.isValid(userId))) {
+            if (isValid(userId) && (isValidObjectId(userId))) {
                 filter['userId'] = userId
             }
             if (isValid(category)) {
@@ -203,7 +205,7 @@ const getBookByBookId = async function (req, res) {
             }
         }
         //  fetch book with bookId
-        const book = await bookModel.findOne({ $and: [{ bookId }, { isDeleted: false }] })
+        const book = await bookModel.findOne({ _id: bookId, isDeleted: false })
         // no book found
         if (!book) {
             return res.status(404).send({ status: false, mseesge: "book not found" })
