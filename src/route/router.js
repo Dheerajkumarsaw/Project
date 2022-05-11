@@ -9,7 +9,7 @@ const reviewController = require("../controller/reviewController")
 
 router.post("/register", userController.createUser);
 
-router.post("/login",  userController.loginUser);
+router.post("/login", userController.loginUser);
 
 router.put("/books/:bookId", middleware.authentication, middleware.autherizaion, bookController.updateBook);
 
@@ -19,7 +19,8 @@ router.get("/books", middleware.authentication, bookController.getBook);
 
 router.get("/books/:bookId", middleware.authentication, bookController.getBookByBookId);
 
-router.post("/books", middleware.authentication, middleware.autherizaion, bookController.createBook)
+// router.post("/books", middleware.authentication, middleware.autherizaion, bookController.createBook)
+router.post("/books", bookController.createBook)
 
 
 
@@ -27,6 +28,5 @@ router.post("/books", middleware.authentication, middleware.autherizaion, bookCo
 
 router.post('/books', bookController.createBook)
 
-// router.get('/getBooks', bookController.getBookByFilter)
 
 module.exports = router

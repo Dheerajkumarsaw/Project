@@ -2,38 +2,42 @@ const { default: mongoose } = require("mongoose");
 const bookModel = require("../model/bookModel");
 const userModel = require("../model/userModel")
 const reviewModel = require("../model/reviewModel")
+const validator = require("../validator/validator")
 
-const isValid = function (value) {
-    if (typeof value === "undefined" || typeof value === null) return false
-    if (typeof value == "string" && value.trim().length === 0) return false
-    return true
-};
+// const isValid = function (value) {
+//     if (typeof value === "undefined" || typeof value === null) return false
+//     if (typeof value == "string" && value.trim().length === 0) return false
+//     return true
+// };
 
-const isValidRegxDate = function (value) {
-    const regx = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
-    return regx.test(value)
-}
-const isValidRegxISBN = function (value) {
-    const regx = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/;
-    return regx.test(value)
-};
-const isValidObjectId = function (ObjectId) {
-    return mongoose.Types.ObjectId.isValid(ObjectId)
-};
+// const isValidRegxDate = function (value) {
+//     const regx = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
+//     return regx.test(value)
+// }
+// const isValidRegxISBN = function (value) {
+//     const regx = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/;
+//     return regx.test(value)
+// };
+// const isValidObjectId = function (ObjectId) {
+//     return mongoose.Types.ObjectId.isValid(ObjectId)
+// };
 
-// ================================================  UPDATING BOOK   =======================
+// ================================================  UPDATING BOOK   ================================================
 
 const updateBook = async function (req, res) {
     try {
         const bookId = req.params.bookId;
         //BOOKID VALIDATIONS
-        if (!isValidObjectId(bookId)) {
+        if (!validator.isValidObjectId(bookId)) {
             return res.status(400).send({ status: false, message: "Enter BookId in Params also Valid Id" })
         }
         //  DOCUMENT EXIST OR NOT IN DB
         const dbbook = await bookModel.findOne({ _id: bookId, isDeleted: false });
         if (!dbbook) {
             return res.status(404).send({ status: false, message: "Book not found With Given id" })
+        }
+        if (req.loggedinuser != dbbook.userId) {   //// CHECKING USER AUTERIZATION
+            return res
         }
         const requestBody = req.body
         //  IF BODY IS EMPTY
@@ -42,24 +46,24 @@ const updateBook = async function (req, res) {
         }
         const { title, excerpt, releasedAt, ISBN } = requestBody; // DESTRUCTURING
         // BODY DATA VALIDATIONS
-        if (!isValid(title)) {
+        if (!validator.isValid(title)) {
             return res.status(400).send({ status: false, message: "Eneter Title" });
         }
-        if (!isValid(excerpt)) {
+        if (!validator.isValid(excerpt)) {
             return res.status(400).send({ status: false, message: "Enter excerpt" });
         }
         //   DATE VALIDATION
-        if (!isValid(releasedAt)) {
+        if (!validator.isValid(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter release date" });
         }
-        if (!isValidRegxDate(releasedAt)) {
+        if (!validator.isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter date in YYYY-MM-DD formate" })
         }
         //  ISBN NO VALIDATION
-        if (!isValid(ISBN)) {
+        if (!validator.isValid(ISBN)) {
             return res.status(400).send({ status: false, message: "Enter ISBN" });
         }
-        if (!isValidRegxISBN(ISBN)) {
+        if (!validator.isValidRegxISBN(ISBN)) {
             return res.status(400).send({ status: false, message: "Enter valid ISBN no" })
         }
         // CHECKING UNIQUE EXISTANCE IN DB
@@ -80,11 +84,11 @@ const updateBook = async function (req, res) {
         res.status(500).send({ status: false, message: err.message })
     }
 };
-// ====================================================  DELETING BOOK  =========================================
+// ====================================================  DELETING BOOK  ====================================================
 const deleteBook = async function (req, res) {
     try {
         const bookId = req.params.bookId;
-        if (!isValidObjectId(bookId)) {
+        if (!validator.isValidObjectId(bookId)) {
             return res.status(400).send({ status: false, message: "Enter BookId in Params also Valid Id" })
         }
         const existBook = await bookModel.findOne({ _id: bookId, isDeleted: false });
@@ -107,35 +111,35 @@ const deleteBook = async function (req, res) {
 // // const regType03 = /^[A-Za-z0-9]{24}$/
 const regType04 = /^[A-Za-z, ]{4,}$/ //
 
-//------------creation---------------------
+//  ===========================================  BOOK  CREATION  ================================================
 const createBook = async function (req, res) {
     try {
         let requestBody = req.body;
 
-        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = requestBody; //destructuring
-
+        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = requestBody; //   DESTRUCTURING
+        //   VALIDATIONS
         if (Object.keys(requestBody).length == 0) {
             return res.status(400).send({ status: false, message: "Please fill all mandatory fields" })
         }
-        if (!isValid(title)) {
+        if (!validator.isValid(title)) {
             return res.status(400).send({ status: false, message: "'title' is mandatory to fill" });
         }
-        if (!isValid(excerpt)) {
+        if (!validator.isValid(excerpt)) {
             return res.status(400).send({ status: false, message: "'excerpt' is mandatory to fill" });
         }
-        if (!isValidObjectId(userId)) {
+        if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "userId should be valid mandatory to fill" });
         }
-        if (!isValid(ISBN) || !isValidRegxISBN(ISBN)) {
+        if (!validator.isValid(ISBN) || !validator.isValidRegxISBN(ISBN)) {
             return res.status(400).send({ status: false, message: "Please Enter a Valid ISBN Number, Type-'String' manadatory field" });
         }
-        if (!isValid(category)) {
+        if (!validator.isValid(category)) {
             return res.status(400).send({ status: false, message: "Category is mandatory and should be 'String Type'" });
         }
-        if (!isValid(subcategory) || !regType04.test(subcategory)) {
+        if (!validator.isValid(subcategory) || !regType04.test(subcategory)) {
             return res.status(400).send({ status: false, message: "Subcategory is mandatory and should be 'String inside an Array'" });
         }
-        if (!isValid(releasedAt) || !isValidRegxDate(releasedAt)) {
+        if (!validator.isValid(releasedAt) || !validator.isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter the date in YYYY-MM-DD format, is mandatory field." });
         }
         //  CHECKING UNIQUE EXISTENCE IN DB
@@ -162,22 +166,23 @@ const createBook = async function (req, res) {
     }
 
 };
-//  ==================================  GET  APIs   =================================================
+
+//  =========================================== GET  APIs   =================================================
 const getBook = async function (req, res) {
     try {
         const queryParams = req.query;
         const filter = { isDeleted: false }
         //  IF QUERY IS EMPTY
         if (Object.keys(queryParams).length > 0) {
-            const { userId, category, subcategory } = queryParams;      //DESTRUCTURING 
+            const { userId, category, subcategory } = queryParams;   //DESTRUCTURING 
             //  QUERY VALIDATIONS
-            if (isValid(userId) && (isValidObjectId(userId))) {
+            if (validator.isValid(userId) && (isValidObjectId(userId))) {
                 filter['userId'] = userId
             }
-            if (isValid(category)) {
+            if (validator.isValid(category)) {
                 filter['category'] = category
             }
-            if (isValid(subcategory)) {
+            if (validator.isValid(subcategory)) {
                 const subArray = subcategory.trim().split(",").map(value => value.trim());
                 filter['subcategory'] = { $all: subArray }
             }
@@ -193,30 +198,30 @@ const getBook = async function (req, res) {
     }
 };
 
-//     =======================  GET BY BOOKID  ==========================================
+//     ==============================================  GET BY BOOKID  ==========================================
 
 const getBookByBookId = async function (req, res) {
     try {
         const bookId = req.params.bookId;
-        // validation
+        //    VALIDATION
         if (bookId) {
-            if (!isValidObjectId(bookId)) {
+            if (!validator.isValidObjectId(bookId)) {
                 return res.status(400).send({ status: false, message: "userId is Invalid" });
             }
         }
-        //  fetch book with bookId
+        //   FETCHING BOOK  WITH   BOKK ID
         const book = await bookModel.findOne({ _id: bookId, isDeleted: false })
-        // no book found
+        // WHEN  NOT FOUND
         if (!book) {
             return res.status(404).send({ status: false, mseesge: "book not found" })
         }
-        // fetch review in book 
+        // FETCHING   REVIEW   FROM   REVIEW   MODEL 
         const review = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 });
         const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt } = book
 
         const data = { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt }
         data["reviewData"] = review;
-        // SENDIN BOOK LIST 
+        // SENDING   BOOK   LIST 
         res.status(200).send({ status: true, msg: "Book list", data: data });
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message });

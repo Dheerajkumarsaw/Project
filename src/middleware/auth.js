@@ -13,6 +13,7 @@ const authentication = async function (req, res, next) {
         if (!decode) {
             return res.status(401).send({ status: false, message: "You are Unautherize to Enter" })
         }
+        req.loggedinuser = decode.userId   //  MAKING IT ACESSECIABLLE ANY WAHERE
         next()
     }
     catch (err) {
