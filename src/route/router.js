@@ -9,17 +9,17 @@ const reviewController = require("../controller/reviewController")
 
 router.post("/register", userController.createUser);
 
-router.post("/login", userController.loginUser);
+router.post("/login",  userController.loginUser);
 
-router.put("/books/:bookId", bookController.updateBook);
+router.put("/books/:bookId", middleware.authentication, middleware.autherizaion, bookController.updateBook);
 
-router.delete("/books/:bookId", bookController.deleteBook);
+router.delete("/books/:bookId", middleware.authentication, middleware.autherizaion, bookController.deleteBook);
 
-router.get("/books", bookController.getBook);
+router.get("/books", middleware.authentication, bookController.getBook);
 
-router.get("/books/:bookId", bookController.getBookByBookId);
+router.get("/books/:bookId", middleware.authentication, bookController.getBookByBookId);
 
-router.post("/books", bookController.createBook)
+router.post("/books", middleware.authentication, middleware.autherizaion, bookController.createBook)
 
 
 
