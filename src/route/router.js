@@ -13,7 +13,13 @@ router.post("/login", userController.loginUser);
 
 router.put("/books/:bookId", bookController.updateBook);
 
-router.delete("/books/:bookId", bookController.deleteBook)
+router.delete("/books/:bookId", bookController.deleteBook);
+
+router.get("/books", bookController.getBook);
+
+router.get("/books/:bookId", bookController.getBookByBookId);
+
+router.post("/books", bookController.createBook)
 
 
 
