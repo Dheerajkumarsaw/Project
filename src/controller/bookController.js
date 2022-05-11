@@ -198,13 +198,13 @@ const getBookByBookId = async function (req, res) {
         const bookId = req.params.bookId;
         // validation
         if (bookId) {
-            if (mongoose.Types.ObjectId.isValid(bookId) == false) {
+            if (!isValidObjectId(bookId)) {
                 return res.status(400).send({ status: false, message: "userId is Invalid" });
             }
         }
         //  fetch book with bookId
         const book = await bookModel.findOne({ $and: [{ bookId }, { isDeleted: false }] })
-        // no book founD
+        // no book found
         if (!book) {
             return res.status(404).send({ status: false, mseesge: "book not found" })
         }
