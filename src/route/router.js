@@ -15,11 +15,12 @@ router.put("/books/:bookId", bookController.updateBook);
 
 router.delete("/books/:bookId", bookController.deleteBook)
 
-router.post("/books", bookController.createBook);
-
-router.get("/books", bookController.getBook)
 
 
 
+
+router.post('/books', bookController.createBook)
+
+// router.get('/getBooks', bookController.getBookByFilter)
 
 module.exports = router
