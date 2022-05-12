@@ -11,9 +11,9 @@ router.post("/register", userController.createUser);
 
 router.post("/login", userController.loginUser);
 
-router.put("/books/:bookId", middleware.authentication, middleware.autherizaion, bookController.updateBook);
+router.put("/books/:bookId", middleware.authentication,  bookController.updateBook);
 
-router.delete("/books/:bookId", middleware.authentication, middleware.autherizaion, bookController.deleteBook);
+router.delete("/books/:bookId", middleware.authentication, bookController.deleteBook);
 
 router.get("/books", middleware.authentication, bookController.getBook);
 

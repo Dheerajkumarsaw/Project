@@ -119,14 +119,14 @@ const regType04 = /^[A-Za-z, ]{4,}$/ //
 const createBook = async function (req, res) {
     try {
         let requestBody = req.body;
-
-        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = requestBody; //   DESTRUCTURING
-        //   VALIDATIONS
+        // IF BOY IS EMPTY
         if (Object.keys(requestBody).length == 0) {
             return res.status(400).send({ status: false, message: "Please fill all mandatory fields" })
         }
+        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = requestBody; //   DESTRUCTURING
+        //   VALIDATIONS
         if (!validator.isValid(title)) {
-            return res.status(400).send({ status: false, message: "'title' is mandatory to fill" });
+            return res.status(400).send({ status: false, message: "'Title' is mandatory to fill" });
         }
         if (!validator.isValid(excerpt)) {
             return res.status(400).send({ status: false, message: "'excerpt' is mandatory to fill" });
@@ -134,16 +134,16 @@ const createBook = async function (req, res) {
         if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "userId should be valid mandatory to fill" });
         }
-        if (!validator.isValid(ISBN) || !validator.isValidRegxISBN(ISBN)) {
+        if (!validator.isValid(ISBN) && !validator.isValidRegxISBN(ISBN)) {
             return res.status(400).send({ status: false, message: "Please Enter a Valid ISBN Number, Type-'String' manadatory field" });
         }
         if (!validator.isValid(category)) {
             return res.status(400).send({ status: false, message: "Category is mandatory and should be 'String Type'" });
         }
-        if (!validator.isValid(subcategory) || !regType04.test(subcategory)) {
+        if (!validator.isValid(subcategory) && !regType04.test(subcategory)) {
             return res.status(400).send({ status: false, message: "Subcategory is mandatory and should be 'String inside an Array'" });
         }
-        if (!validator.isValid(releasedAt) || !validator.isValidRegxDate(releasedAt)) {
+        if (!validator.isValid(releasedAt) && !validator.isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter the date in YYYY-MM-DD format, is mandatory field." });
         }
         //  CHECKING UNIQUE EXISTENCE IN DB
@@ -161,7 +161,7 @@ const createBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "user does not exist with this user ID" })
         }
         //// CHECKING USER AUTERIZATION
-        if (req.loggedInUser != userExist._id) {
+        if (req.loggedInUser != userExist.userId) {
             return res.status(403).send({ status: false, message: "Unautherize to make Changes" })
         }
 

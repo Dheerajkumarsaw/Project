@@ -18,13 +18,13 @@ const createUser = async function (req, res) {
         const requestBody = req.body;
         //IF DATA NOT COME IN BODY
         if (Object.keys(requestBody).length == 0) {
-            return res.status(400).send({ status: true, message: "Enter Data in body" });
+            return res.status(400).send({ status: false, message: "Enter Data in body" });
         }
         const { title, name, phone, email, password, address } = requestBody; //DESTRUCTURING
 
         // DATA COMING VALIDATIONS
         if (!validator.isValid(title)) {
-            return res.status(400).send({ status: false, message: "Enter title first" });
+            return res.status(400).send({ status: false, message: "Enter Title first" });
         }
         if (!validator.isValidTitle(title)) {
             return res.status(400).send({ status: false, message: "Enter any one MR,Mrs,Miss" });
