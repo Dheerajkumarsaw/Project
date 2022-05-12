@@ -22,7 +22,12 @@ const isValidObjectId = function (ObjectId) {
 
 const isValidTitle = function (title) {
     return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
+};
+
+const isValidEmail = function (value) {
+    const regx = /^([a-z0-9]+@[a-z]+\.[a-z]{2,3})?$/;
+    return regx.test(value)
 }
 
 
-module.exports = { isValid, isValidObjectId, isValidRegxDate, isValidRegxISBN, isValidTitle }
+module.exports = { isValid, isValidObjectId, isValidRegxDate, isValidRegxISBN, isValidTitle, isValidEmail }

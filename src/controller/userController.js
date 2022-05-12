@@ -3,15 +3,6 @@ const jwt = require("jsonwebtoken");
 const validator = require("../validator/validator")
 
 
-// const isValid = function (value) {
-//     if (typeof value === "undefined" || typeof value === null) return false
-//     if (typeof value === "string" && value.trim().length === 0) return false
-//     return true
-// };
-
-// const isValidTitle = function (title) {
-//     return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
-// }
 // ============================== User creation =================================
 const createUser = async function (req, res) {
     try {
@@ -44,8 +35,8 @@ const createUser = async function (req, res) {
         if (!validator.isValid(email)) {
             return res.status(400).send({ status: false, message: "Enter Email first" });
         }
-        const emailRegx = /^([a-z0-9]+@[a-z]+\.[a-z]{2,3})?$/
-        if (!emailRegx.test(email)) {
+        // const emailRegx = /^([a-z0-9]+@[a-z]+\.[a-z]{2,3})?$/
+        if (!validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Enter Valid Email" });
         }
         // PASSWORD VALIDATIONS
@@ -102,8 +93,8 @@ const loginUser = async function (req, res) {
         if (!validator.isValid(email)) {
             return res.status(400).send({ status: false, message: "Enter Email First" })
         }
-        const emailRegx = /^([a-z0-9]+@[a-z]+\.[a-z]{2,3})?$/
-        if (!emailRegx.test(email)) {
+        // const emailRegx = /^([a-z0-9]+@[a-z]+\.[a-z]{2,3})?$/
+        if (!validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Enter valid email" });
         }
         // password validations

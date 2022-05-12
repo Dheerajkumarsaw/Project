@@ -4,24 +4,6 @@ const userModel = require("../model/userModel")
 const reviewModel = require("../model/reviewModel")
 const validator = require("../validator/validator")
 
-// const isValid = function (value) {
-//     if (typeof value === "undefined" || typeof value === null) return false
-//     if (typeof value == "string" && value.trim().length === 0) return false
-//     return true
-// };
-
-// const isValidRegxDate = function (value) {
-//     const regx = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
-//     return regx.test(value)
-// }
-// const isValidRegxISBN = function (value) {
-//     const regx = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/;
-//     return regx.test(value)
-// };
-// const isValidObjectId = function (ObjectId) {
-//     return mongoose.Types.ObjectId.isValid(ObjectId)
-// };
-
 // ================================================  UPDATING BOOK   ================================================
 
 const updateBook = async function (req, res) {
@@ -108,11 +90,6 @@ const deleteBook = async function (req, res) {
     }
 }
 
-
-// -------------validators-----------
-// const regType01 = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/ //ISBN
-// const regType02 = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/ //Date
-// // const regType03 = /^[A-Za-z0-9]{24}$/
 const regType04 = /^[A-Za-z, ]{4,}$/ //
 
 //  ===========================================  BOOK  CREATION  ================================================
@@ -134,16 +111,16 @@ const createBook = async function (req, res) {
         if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "userId should be valid mandatory to fill" });
         }
-        if (!validator.isValid(ISBN) && !validator.isValidRegxISBN(ISBN)) {
+        if (!validator.isValid(ISBN) || !validator.isValidRegxISBN(ISBN)) {
             return res.status(400).send({ status: false, message: "Please Enter a Valid ISBN Number, Type-'String' manadatory field" });
         }
         if (!validator.isValid(category)) {
             return res.status(400).send({ status: false, message: "Category is mandatory and should be 'String Type'" });
         }
-        if (!validator.isValid(subcategory) && !regType04.test(subcategory)) {
+        if (!validator.isValid(subcategory) || !regType04.test(subcategory)) {
             return res.status(400).send({ status: false, message: "Subcategory is mandatory and should be 'String inside an Array'" });
         }
-        if (!validator.isValid(releasedAt) && !validator.isValidRegxDate(releasedAt)) {
+        if (!validator.isValid(releasedAt) || !validator.isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter the date in YYYY-MM-DD format, is mandatory field." });
         }
         //  CHECKING UNIQUE EXISTENCE IN DB
