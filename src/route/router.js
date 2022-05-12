@@ -11,21 +11,17 @@ router.post("/register", userController.createUser);
 
 router.post("/login", userController.loginUser);
 
-router.put("/books/:bookId", middleware.authentication, bookController.updateBook);
+router.post("/books", middleware.authentication, bookController.createBook)
 
-router.delete("/books/:bookId", middleware.authentication, bookController.deleteBook);
+router.put("/books/:bookId", middleware.authentication, bookController.updateBook);
 
 router.get("/books", middleware.authentication, bookController.getBook);
 
 router.get("/books/:bookId", middleware.authentication, bookController.getBookByBookId);
 
-router.post("/books", middleware.authentication, bookController.createBook)
+router.delete("/books/:bookId", middleware.authentication, bookController.deleteBook);
 
 
-
-
-
-router.post('/books', bookController.createBook)
 
 
 module.exports = router

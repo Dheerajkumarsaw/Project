@@ -14,38 +14,37 @@ const createUser = async function (req, res) {
         const { title, name, phone, email, password, address } = requestBody; //DESTRUCTURING
 
         // DATA COMING VALIDATIONS
-        if (!validator.isValid(title)) {
-            return res.status(400).send({ status: false, message: "Enter Title first" });
+        if (!validator.isValid(title) || !validator.isValidTitle(title)) {
+            return res.status(400).send({ status: false, message: "Enter Title First As well as Any One of 'Mr , Mrs , Miss'" });
         }
-        if (!validator.isValidTitle(title)) {
-            return res.status(400).send({ status: false, message: "Enter any one MR,Mrs,Miss" });
-        }
+        // if ()) {
+        //     return res.status(400).send({ status: false, message: "Enter any one MR,Mrs,Miss" });
+        // }
         if (!validator.isValid(name)) {
             return res.status(400).send({ status: false, message: "Enter Name first" });
         }
         // MOBILE VALIDATION
-        if (!validator.isValid(phone)) {
-            return res.status(400).send({ status: false, message: "Enter Mobile No first" });
+        if (!validator.isValid(phone) || /^[6-9]\d{9}$/.test(phone)) {
+            return res.status(400).send({ status: false, message: "Enter Mobile No First as Well Valid No" });
         }
-        const mobileRegx = /^[6-9]\d{9}$/;
-        if (!mobileRegx.test(phone)) {
-            return res.status(400).send({ status: false, message: "Enter valid mobile no" });
-        }
+        // const mobileRegx = /^[6-9]\d{9}$/;
+        // if (!mobileRegx.test(phone)) {
+        //     return res.status(400).send({ status: false, message: "Enter valid mobile no" });
+        // }
         //EMAIL VALIDATION
-        if (!validator.isValid(email)) {
-            return res.status(400).send({ status: false, message: "Enter Email first" });
+        if (!validator.isValid(email) || !validator.isValidEmail(email)) {
+            return res.status(400).send({ status: false, message: "Enter Email First Also  Valid" });
         }
-        // const emailRegx = /^([a-z0-9]+@[a-z]+\.[a-z]{2,3})?$/
-        if (!validator.isValidEmail(email)) {
-            return res.status(400).send({ status: false, message: "Enter Valid Email" });
-        }
+        // if (!validator.isValidEmail(email)) {
+        //     return res.status(400).send({ status: false, message: "Enter Valid Email" });
+        // }
         // PASSWORD VALIDATIONS
-        if (!validator.isValid(password)) {
-            return res.status(400).send({ status: false, message: "Enter Password first" });
+        if (!validator.isValid(password) || !(password.length >= 8 && password.length <= 15)) {
+            return res.status(400).send({ status: false, message: "Enter Password First Also Should be 8 to 15 Digits" });
         }
-        if (!(password.length >= 8 && password.length <= 15)) {
-            return res.status(400).send({ status: false, message: "Enter valid password" });
-        }
+        // if (!(password.length >= 8 && password.length <= 15)) {
+        //     return res.status(400).send({ status: false, message: "Enter valid password" });
+        // }
         // ADDRESS VALIDATIONS 
         if (!validator.isValid(address)) {
             return res.status(400).send({ status: false, message: "Enter Address first" });
