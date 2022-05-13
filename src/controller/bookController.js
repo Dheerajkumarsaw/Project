@@ -198,7 +198,7 @@ const deleteBook = async function (req, res) {
         if (!existBook) {
             return res.status(404).send({ status: false, message: "Book not Found ,Allready Deletd With given id" });
         }
-        //// CHECKING USER AUTERIZATION
+        //// CHECKING USER AUTHORIZATION
         if (req.loggedInUser != existBook.userId) {
             return res.status(403).send({ status: false, message: "Unauthorize To Make Changes" })
         }

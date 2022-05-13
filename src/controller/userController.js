@@ -89,20 +89,20 @@ const loginUser = async function (req, res) {
         const { email, password } = requestBody; // DESTRUCTURING
 
         //  Email Validations
-        if (!validator.isValid(email)) {
-            return res.status(400).send({ status: false, message: "Enter Email First" })
+        if (!validator.isValid(email) || !validator.isValidEmail(email)) {
+            return res.status(400).send({ status: false, message: "Enter Email First as Well as Valid Also" })
         }
-        // const emailRegx = /^([a-z0-9]+@[a-z]+\.[a-z]{2,3})?$/
-        if (!validator.isValidEmail(email)) {
-            return res.status(400).send({ status: false, message: "Enter valid email" });
-        }
+        //
+        // if (!validator.isValidEmail(email)) {
+        //     return res.status(400).send({ status: false, message: "Enter valid email" });
+        // }
         // password validations
-        if (!validator.isValid(password)) {
-            return res.status(400).send({ status: false, message: "Enter password first" });
+        if (!validator.isValid(password) || !(password.length >= 8 && password.length <= 15)) {
+            return res.status(400).send({ status: false, message: "Enter password first Also valid" });
         }
-        if (!(password.length >= 8 && password.length <= 15)) {
-            return res.status(400).send({ status: false, message: "Enter valid Password" });
-        }
+        // if (!(password.length >= 8 && password.length <= 15)) {
+        //     return res.status(400).send({ status: false, message: "Enter valid Password" });
+        // }
         //  DB VALIDATIONS 
         const existUser = await userModel.findOne(requestBody)
         if (!existUser) {
