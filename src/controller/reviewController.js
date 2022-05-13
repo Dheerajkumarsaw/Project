@@ -29,13 +29,19 @@ const createReview = async function (req, res) {
         if (!validator.isValid(review)) {
             return res.status(400).send({ status: false, message: "Enter Review" })
         }
+        //   ADDING BOOKID AND DATE IN REQUEST BODY
         requestBody["bookId"] = bookId
         requestBody["reviewedAt"] = Date.now();
+        //   CREATING   REVIEW
         const createdReview = await reviewModel.create(requestBody);
-        const bookreviewCount = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: +1 } })
-        const b = ({ _id, bookId, reviewedBy, reviewedAt, rating, review } = createdReview)
-        b["reviewdata"] = createReview
-        res.status(201).send({ status: true, message: "created successfuly", data: b })
+        const reiewsData = { _id: createdReview._id, bookId: createdReview.bookId, reviewedBy: createdReview.reviewedBy, reviewedAt: createdReview.reviewedAt, rating: createdReview.rating, review: createdReview.review };
+
+        const bookreviewCount = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: +1 } }, { new: true })
+        //  DESTRUCTURING  FOR MAKING  RESPONSE
+        const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt } = bookreviewCount;
+        const data = { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt, reiewsData };
+        //     SENDING RESPONSE BACK
+        res.status(201).send({ status: true, message: "created successfuly", data: data })
     }
     catch (err) {
         res.status(500).send({ status: false, message: err.message })
@@ -123,24 +129,33 @@ const deleteReview = async function (req, res) {
     try {
         const bookId = req.params.bookId;
         const reviewId = req.params.reviewId;
+        //   OBJECTID  VALIDATIONS
+        if (!validator.isValidObjectId(bookId)) {
+            return res.status(400).send({ status: false, message: "Enter valid BookId" })
+        }
+        if (!validator.isValidObjectId(reviewId)) {
+            return res.status(400).send({ status: false, message: "Enter Valid ReviewId" })
+        }
         //      DATA  EXISTANCE  IN DB
         const existBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!existBook) {
             return res.status(404).send({ status: false, message: "Book Not found With Given Id" })
         }
-        const existReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false });
+        //     CHECKING  FOR GIVEN BOOKID  REVIEW EXIST OR NOT
+        const existReview = await reviewModel.findOne({ _id: reviewId, bookId: bookId, isDeleted: false });
         if (!existReview) {
-            return res.status(404).send({ status: false, message: "Review Not Found Use Different Id" });
+            return res.status(404).send({ status: false, message: "Review Not Found For Given BookId" });
         }
-        const existBookReviews = await reviewModel.findOne({ _id: bookId, isDeleted: false }).select({ reviews: 1 });
-        if (!existBookReviews.reviews == 0) {
+        //   same thing doing this line  will disscuss
+        const existBookReviews = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ reviews: 1 });
+        if (existBookReviews.reviews == 0) {
             return res.status(400).send({ status: false, message: "Book has no review" })
         }
         const deletedReview = await reviewModel.findOneAndUpdate({ _id: reviewId, isDeleted: false }, { $set: { isDeleted: true } }, { new: true });
-        const reviewCountInBook = await bookModel.find({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } });
+        const reviewCountInBook = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } },{ new: true });
         res.status(200).send({ status: true, message: "Review Deleted Successfully" })  // some edit have do here
     }
-    catch (res) {
+    catch (err) {
         res.status(500).send({ status: false, message: err.message });
     }
 };

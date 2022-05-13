@@ -9,13 +9,13 @@ const createUser = async function (req, res) {
         const requestBody = req.body;
         //IF DATA NOT COME IN BODY
         if (Object.keys(requestBody).length == 0) {
-            return res.status(400).send({ status: false, message: "Enter Data in body" });
+            return res.status(400).send({ status: false, message: "Enter Registration Details in body" });
         }
         const { title, name, phone, email, password, address } = requestBody; //DESTRUCTURING
 
         // DATA COMING VALIDATIONS
         if (!validator.isValid(title) || !validator.isValidTitle(title)) {
-            return res.status(400).send({ status: false, message: "Enter Title First As well as Any One of 'Mr , Mrs , Miss'" });
+            return res.status(400).send({ status: false, message: "Enter Title First ,As well as Any One of 'Mr , Mrs , Miss'" });
         }
         // if ()) {
         //     return res.status(400).send({ status: false, message: "Enter any one MR,Mrs,Miss" });
@@ -24,8 +24,8 @@ const createUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Enter Name first" });
         }
         // MOBILE VALIDATION
-        if (!validator.isValid(phone) || /^[6-9]\d{9}$/.test(phone)) {
-            return res.status(400).send({ status: false, message: "Enter Mobile No First as Well Valid No" });
+        if (!validator.isValid(phone) || !/^[6-9]\d{9}$/.test(phone)) {
+            return res.status(400).send({ status: false, message: "Enter Mobile No First, as Well Valid No" });
         }
         // const mobileRegx = /^[6-9]\d{9}$/;
         // if (!mobileRegx.test(phone)) {
@@ -33,14 +33,14 @@ const createUser = async function (req, res) {
         // }
         //EMAIL VALIDATION
         if (!validator.isValid(email) || !validator.isValidEmail(email)) {
-            return res.status(400).send({ status: false, message: "Enter Email First Also  Valid" });
+            return res.status(400).send({ status: false, message: "Enter Email First , Also  Valid" });
         }
         // if (!validator.isValidEmail(email)) {
         //     return res.status(400).send({ status: false, message: "Enter Valid Email" });
         // }
         // PASSWORD VALIDATIONS
         if (!validator.isValid(password) || !(password.length >= 8 && password.length <= 15)) {
-            return res.status(400).send({ status: false, message: "Enter Password First Also Should be 8 to 15 Digits" });
+            return res.status(400).send({ status: false, message: "Enter Password First, Also Should be 8 to 15 Digits" });
         }
         // if (!(password.length >= 8 && password.length <= 15)) {
         //     return res.status(400).send({ status: false, message: "Enter valid password" });
@@ -64,11 +64,11 @@ const createUser = async function (req, res) {
         // DUPLICAY VALIDATION
         const uniqueEmail = await userModel.findOne({ email: email });
         if (uniqueEmail) {
-            return res.status(400).send({ status: false, message: "User Allready Email Exist" });
+            return res.status(400).send({ status: false, message: "User's Email Allready  Exist" });
         }
         const uniquePhone = await userModel.findOne({ phone: phone });
         if (uniquePhone) {
-            return res.status(400).send({ status: false, message: "User Allready phone Exist" });
+            return res.status(400).send({ status: false, message: "User's phone Allready  Exist" });
         }
         // DATA CREATION
         const createdUser = await userModel.create(requestBody);
