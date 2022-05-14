@@ -77,13 +77,7 @@ const updateBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Enter BookId in Params also Valid Id" });
         }
         //  DOCUMENT EXIST OR NOT IN DB
-        const dbbook = await bookModel.findOne({ _id: bookId, isDeleted: false });
-        if (!dbbook) {
-            return res.status(404).send({ status: false, message: "Book not found With Given id" });
-        }
-        if (req.loggedInUser != dbbook.userId) {   //// CHECKING USER AUTERIZATION
-            return res.status(403).send({ status: false, message: "Unauthorize To Make Changes" });
-        }
+       
         const requestBody = req.body;
         //  IF BODY IS EMPTY
         if (Object.keys(requestBody).length == 0) {
@@ -101,16 +95,18 @@ const updateBook = async function (req, res) {
         if (!validator.isValid(releasedAt) || !validator.isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter release date Also Formate Should be 'YYYY-MM-DD' " });
         }
-        // if (!validator.isValidRegxDate(releasedAt)) {
-        //     return res.status(400).send({ status: false, message: "Enter date in YYYY-MM-DD formate" })
-        // }
+        
         //  ISBN NO VALIDATION
         if (!validator.isValid(ISBN) || !validator.isValidRegxISBN(ISBN)) {
             return res.status(400).send({ status: false, message: "Enter ISBN Also Valid" });
         }
-        // if (!validator.isValidRegxISBN(ISBN)) {
-        //     return res.status(400).send({ status: false, message: "Enter valid ISBN no" })
-        // }
+        const dbbook = await bookModel.findOne({ _id: bookId, isDeleted: false });
+        if (!dbbook) {
+            return res.status(404).send({ status: false, message: "Book not found With Given id" });
+        }
+        if (req.loggedInUser != dbbook.userId) {   //// CHECKING USER AUTERIZATION
+            return res.status(403).send({ status: false, message: "Unauthorize To Make Changes" });
+        }       
         // CHECKING UNIQUE EXISTANCE IN DB
         const uniqueIsbn = await bookModel.findOne({ ISBN: ISBN });
         if (uniqueIsbn) {
