@@ -17,9 +17,7 @@ const createUser = async function (req, res) {
         if (!validator.isValid(title) || !validator.isValidTitle(title)) {
             return res.status(400).send({ status: false, message: "Enter Title First ,As well as Any One of 'Mr , Mrs , Miss'" });
         }
-        // if ()) {
-        //     return res.status(400).send({ status: false, message: "Enter any one MR,Mrs,Miss" });
-        // }
+        
         if (!validator.isValid(name)) {
             return res.status(400).send({ status: false, message: "Enter Name first" });
         }
@@ -27,24 +25,17 @@ const createUser = async function (req, res) {
         if (!validator.isValid(phone) || !/^[6-9]\d{9}$/.test(phone)) {
             return res.status(400).send({ status: false, message: "Enter Mobile No First, as Well Valid No" });
         }
-        // const mobileRegx = /^[6-9]\d{9}$/;
-        // if (!mobileRegx.test(phone)) {
-        //     return res.status(400).send({ status: false, message: "Enter valid mobile no" });
-        // }
+        
         //EMAIL VALIDATION
         if (!validator.isValid(email) || !validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Enter Email First , Also  Valid" });
         }
-        // if (!validator.isValidEmail(email)) {
-        //     return res.status(400).send({ status: false, message: "Enter Valid Email" });
-        // }
+       
         // PASSWORD VALIDATIONS
         if (!validator.isValid(password) || !(password.length >= 8 && password.length <= 15)) {
             return res.status(400).send({ status: false, message: "Enter Password First, Also Should be 8 to 15 Digits" });
         }
-        // if (!(password.length >= 8 && password.length <= 15)) {
-        //     return res.status(400).send({ status: false, message: "Enter valid password" });
-        // }
+        
         // ADDRESS VALIDATIONS 
         if (!validator.isValid(address)) {
             return res.status(400).send({ status: false, message: "Enter Address first" });
@@ -92,17 +83,12 @@ const loginUser = async function (req, res) {
         if (!validator.isValid(email) || !validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Enter Email First as Well as Valid Also" })
         }
-        //
-        // if (!validator.isValidEmail(email)) {
-        //     return res.status(400).send({ status: false, message: "Enter valid email" });
-        // }
+        
         // password validations
         if (!validator.isValid(password) || !(password.length >= 8 && password.length <= 15)) {
             return res.status(400).send({ status: false, message: "Enter password first Also valid" });
         }
-        // if (!(password.length >= 8 && password.length <= 15)) {
-        //     return res.status(400).send({ status: false, message: "Enter valid Password" });
-        // }
+        
         //  DB VALIDATIONS 
         const existUser = await userModel.findOne(requestBody)
         if (!existUser) {

@@ -54,6 +54,10 @@ const createBook = async function (req, res) {
         if (req.loggedInUser != userId) {
             return res.status(403).send({ status: false, message: "Unauthorize to make Changes" });
         }
+        if (requestBody.isDeleted == true) {
+            deletedAt = Date.now()
+            requestBody["deletedAt"] = deletedAt
+        }
         //  DATA  CREATION
         const createdBook = await bookModel.create(requestBody);
         res.status(201).send({ status: true, message: "Successfully Created", data: createdBook });
@@ -135,7 +139,7 @@ const getBook = async function (req, res) {
         if (Object.keys(queryParams).length > 0) {
             const { userId, category, subcategory } = queryParams;   //DESTRUCTURING 
             //  QUERY VALIDATIONS
-            if (validator.isValid(userId) && (isValidObjectId(userId))) {
+            if (validator.isValid(userId) && (validator.isValidObjectId(userId))) {
                 filter['userId'] = userId
             }
             if (validator.isValid(category)) {
@@ -163,10 +167,8 @@ const getBookByBookId = async function (req, res) {
     try {
         const bookId = req.params.bookId;
         //    VALIDATION
-        if (bookId) {
-            if (!validator.isValidObjectId(bookId)) {
-                return res.status(400).send({ status: false, message: "userId is Invalid" });
-            }
+        if (!validator.isValidObjectId(bookId)) {
+            return res.status(400).send({ status: false, message: "userId is Invalid" });
         }
         //   FETCHING BOOK  WITH   BOKK ID
         const book = await bookModel.findOne({ _id: bookId, isDeleted: false })

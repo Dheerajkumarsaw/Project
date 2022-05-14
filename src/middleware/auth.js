@@ -8,8 +8,8 @@ const authentication = async function (req, res, next) {
         if (!token) {
             return res.status(403).send({ status: false, message: "Token should Be Present" })
         }
-        let decode=jwt.decode(token,"indiaisgreate")
-        decode = jwt.verify(token, "indiaisgreate");
+        // let decode=jwt.decode(token,"indiaisgreate")
+        const decode = jwt.verify(token, "indiaisgreate");
         if (!decode) {
             return res.status(401).send({ status: false, message: "You are Unautherize to Enter" })
         }
