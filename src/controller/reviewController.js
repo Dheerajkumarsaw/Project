@@ -8,7 +8,7 @@ const createReview = async function (req, res) {
     try {
         const bookId = req.params.bookId;
         if (!validator.isValidObjectId(bookId)) {
-            return res.status(400).send({ status: false, message: 'Please! enter a Valid BookId in Path Params,(mandatory field).'})
+            return res.status(400).send({ status: false, message: 'Please! enter a Valid BookId in Path Params,(mandatory field).' })
         }
         //    IF  BODY IS EMPTY
         const requestBody = req.body;
@@ -16,7 +16,7 @@ const createReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please! fill all the review's mandatory fields." })
         }
         //.......Destructuting......
-        const { rating, review } = requestBody; 
+        const { rating, review } = requestBody;
 
         //     BODY DATA VALIDATIONS
         if (!validator.isValid(rating) || !(rating >= 1 && rating <= 5)) {
@@ -31,8 +31,8 @@ const createReview = async function (req, res) {
 
         //     Count inc
         const bookreviewCount = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: +1 } }, { new: true })
-        if(!bookreviewCount){
-            return res.status(404).send({status: false, message: "The Book does not exist with given book ID in params"})
+        if (!bookreviewCount) {
+            return res.status(404).send({ status: false, message: "The Book does not exist with given book ID in params" })
         }
         //   CREATING   REVIEW
         const createdReview = await reviewModel.create(requestBody);
@@ -63,16 +63,16 @@ const updateReview = async function (req, res) {
         if (!validator.isValid(bookId) || !validator.isValidObjectId(bookId)) {
             return res.status(400).send({ status: false, message: "Please! enter a valid bookid" })
         }
-        const bookDetails = await bookModel.findOne({ _id: bookId, isDeleted: false })
-        if (!bookDetails) {
-            return res.status(404).send({ status: false, message: "Book does not found with given id" })
-        }
-
+        
         if (!validator.isValid(reviewId) || !validator.isValidObjectId(reviewId)) {
             return res.status(400).send({ status: false, message: "Please! enter a valid reviewId" })
         }
-        const reviewDetails = await reviewModel.findById(reviewId)
-        if (!reviewDetails) {
+        const existBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
+        if (!existBook) {
+            return res.status(404).send({ status: false, message: "Book does not found with given id" })
+        }
+        const existReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false })
+        if (!existReview) {
             return res.status(404).send({ status: false, message: "Review Id does not exist in Data-Base" })
         }
 
@@ -89,7 +89,6 @@ const updateReview = async function (req, res) {
         const { reviewedBy, rating, review } = requestBody  // DESTURCTURING
 
         const filter = {}
-
         if (reviewedBy) {
             if (!validator.isValid(reviewedBy)) {
                 return res.status(400).send({ status: false, message: "Please! enter a valid data to 'reviewedby' feild" })
@@ -140,7 +139,7 @@ const deleteReview = async function (req, res) {
         if (!validator.isValidObjectId(reviewId)) {
             return res.status(400).send({ status: false, message: "Please! Enter a valid ReviewId" })
         }
-            //  DATA  EXISTANCE  IN DB
+        //  DATA  EXISTANCE  IN DB
         const existBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!existBook) {
             return res.status(404).send({ status: false, message: "Book Not found With Given Id" })
@@ -158,7 +157,7 @@ const deleteReview = async function (req, res) {
         // const existBookReviews = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ reviews: 1 });
 
 
-        const reviewCountInBook = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } },{ new: true });
+        const reviewCountInBook = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1 } }, { new: true });
         res.status(200).send({ status: true, message: "Review Deleted Successfully" })  // some edit have do here
     }
     catch (err) {
