@@ -63,7 +63,7 @@ const updateReview = async function (req, res) {
         if (!validator.isValid(bookId) || !validator.isValidObjectId(bookId)) {
             return res.status(400).send({ status: false, message: "Please! enter a valid bookid" })
         }
-        
+
         if (!validator.isValid(reviewId) || !validator.isValidObjectId(reviewId)) {
             return res.status(400).send({ status: false, message: "Please! enter a valid reviewId" })
         }
@@ -77,7 +77,7 @@ const updateReview = async function (req, res) {
         }
 
         // check params-bookid matches with reiews bookid
-        if (!(reviewDetails.bookId == bookId)) {
+        if (!(existReview.bookId == bookId)) {
             return res.status(400).send({ status: false, message: `The Review does not belong to book by Book id: ${bookId}` })
         }
         if (!(Object.keys(requestBody).length > 0)) {
@@ -110,9 +110,9 @@ const updateReview = async function (req, res) {
             filter['review'] = review.trim()
         }
         const updatedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { $set: filter }, { new: true })
-        const reviewData = await reviewModel.find({ bookId: bookId }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
+        const reviewData = await reviewModel.findOne({ bookId: bookId }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
         //      Destructuring
-        const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt } = bookDetails
+        const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt } = existBook
         //     Assigning to varable
         const data = { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt, reviewData }
 

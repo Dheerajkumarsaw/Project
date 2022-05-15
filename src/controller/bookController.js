@@ -102,7 +102,7 @@ const updateBook = async function (req, res) {
         }
         const dbbook = await bookModel.findOne({ _id: bookId, isDeleted: false });
         if (!dbbook) {
-            return res.status(404).send({ status: false, message: "Book not found With Given id" });
+            return res.status(404).send({ status: false, message: "Book not found With Given id,or Allready Delete" });
         }
         if (req.loggedInUser != dbbook.userId) {   //// CHECKING USER AUTERIZATION
             return res.status(403).send({ status: false, message: "Unauthorize To Make Changes" });
