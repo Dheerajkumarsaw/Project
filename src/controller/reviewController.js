@@ -111,7 +111,7 @@ const updateReview = async function (req, res) {
             filter['review'] = review.trim()
         }
         const updatedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { $set: filter }, { new: true })
-        const reviewData = await reviewModel.findOne({ bookId: bookId }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
+        const reviewData = await reviewModel.findOne({ _id: reviewId }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 }) // glti shi done
         //      Destructuring
         const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt } = existBook
         //     Assigning to varable  data object
