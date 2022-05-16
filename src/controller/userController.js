@@ -17,7 +17,7 @@ const createUser = async function (req, res) {
         if (!validator.isValid(title) || !validator.isValidTitle(title)) {
             return res.status(400).send({ status: false, message: "Enter Title First ,As well as Any One of 'Mr , Mrs , Miss'" });
         }
-        
+
         if (!validator.isValid(name)) {
             return res.status(400).send({ status: false, message: "Enter Name first" });
         }
@@ -25,17 +25,17 @@ const createUser = async function (req, res) {
         if (!validator.isValid(phone) || !/^[6-9]\d{9}$/.test(phone)) {
             return res.status(400).send({ status: false, message: "Enter Mobile No First, as Well Valid No" });
         }
-        
+
         //EMAIL VALIDATION
         if (!validator.isValid(email) || !validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Enter Email First , Also  Valid" });
         }
-       
+
         // PASSWORD VALIDATIONS
         if (!validator.isValid(password) || !(password.length >= 8 && password.length <= 15)) {
             return res.status(400).send({ status: false, message: "Enter Password First, Also Should be 8 to 15 Digits" });
         }
-        
+
         // ADDRESS VALIDATIONS 
         if (!validator.isValid(address)) {
             return res.status(400).send({ status: false, message: "Enter Address first" });
@@ -83,12 +83,12 @@ const loginUser = async function (req, res) {
         if (!validator.isValid(email) || !validator.isValidEmail(email)) {
             return res.status(400).send({ status: false, message: "Enter Email First as Well as Valid Also" })
         }
-        
+
         // password validations
         if (!validator.isValid(password) || !(password.length >= 8 && password.length <= 15)) {
             return res.status(400).send({ status: false, message: "Enter password first Also valid" });
         }
-        
+
         //  DB VALIDATIONS 
         const existUser = await userModel.findOne(requestBody)
         if (!existUser) {
@@ -103,7 +103,7 @@ const loginUser = async function (req, res) {
         }, "indiaisgreate");
         //TOKEN SENDING
         res.setHeader("x-api-key", token)
-        res.status(200).send({ status: true, message: "Logined successfully", Token: token })
+        res.status(200).send({ status: true, message: "Logined successfully", data: token })
     }
     catch (err) {
         res.status(500).send({ status: false, message: err.message })

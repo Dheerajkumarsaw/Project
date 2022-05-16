@@ -77,7 +77,7 @@ const updateBook = async function (req, res) {
             return res.status(400).send({ status: false, message: "Enter BookId in Params also Valid Id" });
         }
         //  DOCUMENT EXIST OR NOT IN DB
-       
+
         const requestBody = req.body;
         //  IF BODY IS EMPTY
         if (Object.keys(requestBody).length == 0) {
@@ -95,7 +95,7 @@ const updateBook = async function (req, res) {
         if (!validator.isValid(releasedAt) || !validator.isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter release date Also Formate Should be 'YYYY-MM-DD' " });
         }
-        
+
         //  ISBN NO VALIDATION
         if (!validator.isValid(ISBN) || !validator.isValidRegxISBN(ISBN)) {
             return res.status(400).send({ status: false, message: "Enter ISBN Also Valid" });
@@ -106,7 +106,7 @@ const updateBook = async function (req, res) {
         }
         if (req.loggedInUser != dbbook.userId) {   //// CHECKING USER AUTERIZATION
             return res.status(403).send({ status: false, message: "Unauthorize To Make Changes" });
-        }       
+        }
         // CHECKING UNIQUE EXISTANCE IN DB
         const uniqueIsbn = await bookModel.findOne({ ISBN: ISBN });
         if (uniqueIsbn) {
@@ -164,7 +164,7 @@ const getBookByBookId = async function (req, res) {
         const bookId = req.params.bookId;
         //    VALIDATION
         if (!validator.isValidObjectId(bookId)) {
-            return res.status(400).send({ status: false, message: "userId is Invalid" });
+            return res.status(400).send({ status: false, message: "bookId is Invalid" });
         }
         //   FETCHING BOOK  WITH   BOKK ID
         const book = await bookModel.findOne({ _id: bookId, isDeleted: false })
@@ -202,7 +202,7 @@ const deleteBook = async function (req, res) {
         }
         deletedAt = Date.now();
         const updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: deletedAt } }, { new: true });
-        res.status(200).send({ status: true, message: "Successfully Deleted", data: updatedBook })
+        res.status(200).send({ status: true, message: "Successfully Deleted" })
     }
     catch (err) {
         res.status(500).send({ status: false, message: err.message })
