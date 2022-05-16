@@ -174,7 +174,7 @@ const getBookByBookId = async function (req, res) {
         }
         // FETCHING   REVIEW   FROM   REVIEW   MODEL 
         const review = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 });
-        const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt } = book
+        const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt } = book  // DESTRUCTURING  BOOK  FOR MAKING RESPONSE
 
         const data = { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, deletedAt, releaseAt, createdAt, updatedAt }
         data["reviewData"] = review;
