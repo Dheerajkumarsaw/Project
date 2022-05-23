@@ -10,6 +10,7 @@ const regType04 = /^[A-Za-z, ]{4,}$/ //
 const createBook = async function (req, res) {
     try {
         const requestBody = req.body;
+        console.log(requestBody)
         const requesFiles = req.files
         // IF BOY IS EMPTY
         if (Object.keys(requestBody).length == 0) {
@@ -35,9 +36,11 @@ const createBook = async function (req, res) {
         if (!validator.isValid(category)) {
             return res.status(400).send({ status: false, message: "Category is mandatory and should be 'String Type'" });
         }
-        if (!validator.isValid(subcategory) || !regType04.test(subcategory)) {
-            return res.status(400).send({ status: false, message: "Subcategory is mandatory and should be 'String inside an Array'" });
-        }
+        // console.log(JSON.parse(subcategory))
+
+        // if (!validator.isValid(JSON.parse(subcategory)) || !regType04.test(JSON.parse(subcategory))) {
+        //     return res.status(400).send({ status: false, message: "Subcategory is mandatory and should be 'String inside an Array'" });
+        // }
         if (!validator.isValid(releasedAt) || !validator.isValidRegxDate(releasedAt)) {
             return res.status(400).send({ status: false, message: "Enter the date in YYYY-MM-DD format, is mandatory field." });
         }
@@ -55,7 +58,9 @@ const createBook = async function (req, res) {
         if (!userExist) {
             return res.status(404).send({ status: false, message: "User does not exist with This UserId Register First" });
         }
-        let uploadedFilesURL = await uploadFiles(files[0])
+        let uploadedFilesURL = await uploadFiles.uploadFiles(requesFiles[0]);
+        requestBody.bookCover = uploadedFilesURL.Location
+        console.log(uploadedFilesURL)
         //  CHECKING USER AUTHERIZATION
         if (req.loggedInUser != userId) {
             return res.status(403).send({ status: false, message: "Unauthorize to make Changes" });

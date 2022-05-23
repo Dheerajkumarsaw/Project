@@ -2,8 +2,8 @@ const AWS = require("aws-sdk");
 
 //   MAKING  CONNECTION  WITH AWS S3
 AWS.config.update({
-    accessKeyId: "AKIAY3L35MCRVFM24Q7U",
-    secretAccessKeyId: "qGG1HE0qRixcW1T1Wg1bv+08tQrIkFVyDFqSft4J",
+    accessKeyId: "AKIAY3L35MCRUJ6WPO6J",
+    secretAccessKey: "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",
     region: "ap-south-1"
 });
 
