@@ -3,15 +3,20 @@ const bookModel = require("../model/bookModel");
 const userModel = require("../model/userModel");
 const reviewModel = require("../model/reviewModel");
 const validator = require("../validator/validator");
+const uploadFiles = require("../controller/aws/aws-s3")
 
 //  ============================================= BOOK  CREATION  ================================================
 const regType04 = /^[A-Za-z, ]{4,}$/ //
 const createBook = async function (req, res) {
     try {
         const requestBody = req.body;
+        const requesFiles = req.files
         // IF BOY IS EMPTY
         if (Object.keys(requestBody).length == 0) {
             return res.status(400).send({ status: false, message: "Please fill all mandatory fields" });
+        }
+        if (!validator.isValid(requesFiles) || requesFiles.length == 0) {
+            return res.status(400).send({ status: false, message: "Please send files" })
         }
         const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = requestBody; //   DESTRUCTURING
         //   VALIDATIONS
@@ -50,6 +55,7 @@ const createBook = async function (req, res) {
         if (!userExist) {
             return res.status(404).send({ status: false, message: "User does not exist with This UserId Register First" });
         }
+        let uploadedFilesURL = await uploadFiles(files[0])
         //  CHECKING USER AUTHERIZATION
         if (req.loggedInUser != userId) {
             return res.status(403).send({ status: false, message: "Unauthorize to make Changes" });
