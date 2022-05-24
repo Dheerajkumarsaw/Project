@@ -61,7 +61,7 @@ const createBook = async function (req, res) {
         }
         //  URL CREATION  FROM   AWS S3  SERVICE
         let uploadedFilesURL = await uploadFiles.uploadFiles(requesFiles[0]);
-        requestBody.bookCover = uploadedFilesURL.Location
+        requestBody.bookCover = uploadedFilesURL
         //  CHECKING USER AUTHERIZATION
         if (req.loggedInUser != userId) {
             return res.status(403).send({ status: false, message: "Unauthorize to make Changes" });

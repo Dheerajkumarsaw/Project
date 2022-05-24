@@ -14,7 +14,7 @@ let uploadFiles = async (file) => {
         let uploadParams = {
             ACL: "public-read",
             Bucket: "classroom-training-bucket",
-            Key: "Group20/BookManagement/",
+            Key: "Group20/BookManagement/" + file.originalname,
             Body: file.buffer
         };
         s3.upload(uploadParams, function (err, data) {
