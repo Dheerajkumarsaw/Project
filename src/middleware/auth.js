@@ -9,12 +9,15 @@ const authentication = async function (req, res, next) {
             return res.status(400).send({ status: false, message: "Token should Be Present" })
         }
         // let decode=jwt.decode(token,"indiaisgreate")
-        const decode = jwt.verify(token, "indiaisgreate");
-        if (!decode) {
-            return res.status(401).send({ status: false, message: "You are Unautherize to Enter" })
-        }
-        req.loggedInUser = decode.userId   //  MAKING IT ACESSECIABLLE ANY WAHERE
-        next()
+        const decode = jwt.verify(token, "indiaisgreate", function (err, payload) {
+            if (err) {
+                // console.log(err)
+                return res.status(401).send({ status: false, message: "Unautherize To Make Changes", Error: err })
+            } else {
+                req.loggedInUser = payload.userId;
+                next()
+            }
+        });
     }
     catch (err) {
         res.status(500).send({ status: false, message: err.message })
